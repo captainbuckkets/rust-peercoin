@@ -1148,7 +1148,9 @@ impl Encodable for Transaction {
             len += self.version.consensus_encode(w)?;
         }
 
-        len += self.time.consensus_encode(w)?;
+        if self.version != 4 {
+            len += self.time.consensus_encode(w)?;
+        }
 
         // To avoid serialization ambiguity, no inputs means we use BIP141 serialization (see
         // `Transaction` docs for full explanation).
