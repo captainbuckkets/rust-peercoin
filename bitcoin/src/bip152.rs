@@ -384,6 +384,7 @@ mod test {
     fn dummy_tx(nonce: &[u8]) -> Transaction {
         Transaction {
             version: 1,
+            time: 0,
             lock_time: absolute::LockTime::from_consensus(2),
             input: vec![TxIn {
                 previous_output: OutPoint::new(Txid::hash(nonce), 0),

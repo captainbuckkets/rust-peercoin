@@ -886,6 +886,7 @@ impl<R: Borrow<Transaction>> SighashCache<R> {
             // Build tx to sign
             let mut tx = Transaction {
                 version: self_.version,
+                time: self_.time,
                 lock_time: self_.lock_time,
                 input: vec![],
                 output: vec![],
