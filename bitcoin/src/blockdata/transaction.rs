@@ -1142,12 +1142,14 @@ impl Encodable for Transaction {
     fn consensus_encode<W: io::Write + ?Sized>(&self, w: &mut W) -> Result<usize, io::Error> {
         let mut len = 0;
 
-        // TODO:
+        // TODO: Isn't this supposed to remove time?
+        // len += self.version.consensus_encode(w)?;
         if self.version != 4 {
-
+            len += self.version.consensus_encode(w)?;
         }
 
-        len += self.version.consensus_encode(w)?;
+        len += self.time.consensus_encode(w)?;
+
         // To avoid serialization ambiguity, no inputs means we use BIP141 serialization (see
         // `Transaction` docs for full explanation).
         let mut have_witness = self.input.is_empty();
