@@ -1142,6 +1142,8 @@ impl Encodable for Transaction {
     fn consensus_encode<W: io::Write + ?Sized>(&self, w: &mut W) -> Result<usize, io::Error> {
         let mut len = 0;
 
+        println!("Transaction consensus_encode {} {}", self.version, self.time);
+
         // TODO: Isn't this supposed to remove time?
         // len += self.version.consensus_encode(w)?;
         if self.version != 3 {
