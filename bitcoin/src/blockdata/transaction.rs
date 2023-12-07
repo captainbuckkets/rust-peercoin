@@ -1184,7 +1184,11 @@ impl Decodable for Transaction {
     fn consensus_decode_from_finite_reader<R: io::Read + ?Sized>(
         r: &mut R,
     ) -> Result<Self, encode::Error> {
+
         let version = i32::consensus_decode_from_finite_reader(r)?;
+
+        println!("TX VERSION {}", version);
+
         let time = if version != 3 { <u32>::consensus_decode_from_finite_reader(r)? } else { 0 };
         let input = Vec::<TxIn>::consensus_decode_from_finite_reader(r)?;
         // segwit
