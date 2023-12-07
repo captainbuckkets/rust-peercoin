@@ -1190,6 +1190,8 @@ impl Decodable for Transaction {
         println!("TX VERSION {}", version);
 
         let time = if version != 3 { <u32>::consensus_decode_from_finite_reader(r)? } else { 0 };
+        println!("TX TIME {}", time);
+
         let input = Vec::<TxIn>::consensus_decode_from_finite_reader(r)?;
         // segwit
         if input.is_empty() {
