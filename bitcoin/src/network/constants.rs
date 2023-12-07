@@ -78,6 +78,15 @@ pub enum Network {
 }
 
 impl Network {
+    /// Returns the network for the given [`ChainHash`].
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Network::Bitcoin => "Bitcoin",
+            Network::Testnet => "Testnet",
+            Network::Signet => "Signet",
+            Network::Regtest => "Regtest",
+        }
+    }
     /// Creates a `Network` from the magic bytes.
     ///
     /// # Examples
