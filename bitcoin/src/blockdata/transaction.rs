@@ -1144,11 +1144,11 @@ impl Encodable for Transaction {
 
         // TODO: Isn't this supposed to remove time?
         // len += self.version.consensus_encode(w)?;
-        if self.version != 4 {
+        if self.version != 3 {
             len += self.version.consensus_encode(w)?;
         }
 
-        if self.version != 4 {
+        if self.version != 3 {
             len += self.time.consensus_encode(w)?;
         }
 
