@@ -949,6 +949,9 @@ impl Transaction {
         let non_input_size =
         // version:
         4 +
+        // If its version 4, exclude the time
+        if self.version == 4 { 0 } else { 4 } +
+
         // count varints:
         VarInt(self.input.len() as u64).len() +
         VarInt(self.output.len() as u64).len() +
@@ -981,6 +984,8 @@ impl Transaction {
         let non_input_size =
         // version:
         4 +
+        // If its version 4, exclude the time
+        if self.version == 4 { 0 } else { 4 } +
         // count varints:
         VarInt(self.input.len() as u64).len() +
         VarInt(self.output.len() as u64).len() +
@@ -1144,15 +1149,11 @@ impl Encodable for Transaction {
 
         println!("Transaction consensus_encode {} {}", self.version, self.time);
 
-        // TODO: Isn't this supposed to remove time?
-        // len += self.version.consensus_encode(w)?;
-        if self.version != 3 {
+        if self.version != 4 {
             len += self.version.consensus_encode(w)?;
         }
 
-        if self.version != 3 {
-            len += self.time.consensus_encode(w)?;
-        }
+        len += self.time.consensus_encode(w)?;
 
         // To avoid serialization ambiguity, no inputs means we use BIP141 serialization (see
         // `Transaction` docs for full explanation).
@@ -1184,12 +1185,17 @@ impl Decodable for Transaction {
     fn consensus_decode_from_finite_reader<R: io::Read + ?Sized>(
         r: &mut R,
     ) -> Result<Self, encode::Error> {
-
         let version = i32::consensus_decode_from_finite_reader(r)?;
 
         println!("TX VERSION {}", version);
 
-        let time = if version != 3 { <u32>::consensus_decode_from_finite_reader(r)? } else { 0 };
+        let time = if version != 3 && version != 4 {
+            <u32>::consensus_decode_from_finite_reader(r)?
+        } else {
+            // Really seems like me including 0 is causing the issue
+            0
+        };
+
         println!("TX TIME {}", time);
 
         let input = Vec::<TxIn>::consensus_decode_from_finite_reader(r)?;
@@ -1515,6 +1521,7 @@ mod tests {
 
     use core::str::FromStr;
 
+    // use crate::BlockHash;
     use crate::blockdata::constants::WITNESS_SCALE_FACTOR;
     use crate::blockdata::locktime::absolute;
     use crate::blockdata::script::ScriptBuf;
@@ -1751,6 +1758,20 @@ mod tests {
         let mut serializer = serde_json::Serializer::new(&mut bytes);
         con_serde::With::<con_serde::Hex>::serialize(&tx, &mut serializer).unwrap();
         assert_eq!(bytes, json.as_bytes())
+    }
+
+    #[test]
+    fn test_v3_transaction() {
+        let tx_bytes = hex!("030000000001010000000000000000000000000000000000000000000000000000000000000000ffffffff0603ade70a0101ffffffff020000000000000000000000000000000000266a24aa21a9ede8eb36d2f28c817479902d8f9007e20884b2b27fdf804aa70f279efa10f889840120000000000000000000000000000000000000000000000000000000000000000000000000");
+        let tx: Result<Transaction, _> = deserialize(&tx_bytes);
+        assert!(tx.is_ok());
+    }
+
+    #[test]
+    fn test_v4_transaction() {
+        let tx_bytes = hex!("04000000f0cd0a625f3c4edd2ed383b6b768d0a4ffcbd0a434748c222c5a9aed4251f6b959ac4babb9b5a0fa60aca7ef2f6573edf0ab1160258ca4c999715d735a61568c612858658c330b1c0000000002030000000001010000000000000000000000000000000000000000000000000000000000000000ffffffff0603ade70a0101ffffffff020000000000000000000000000000000000266a24aa21a9ede8eb36d2f28c817479902d8f9007e20884b2b27fdf804aa70f279efa10f8898401200000000000000000000000000000000000000000000000000000000000000000000000000300000001d3dfd47789fc64e2d436e25588c1e70485bd8d6b8f19bf6070f3d3af9a7d370d01000000484730440220025c42834e88b20c336a38de917f15d3933495838ab9d7e6a14489d810f3dc0b02206c9d60abf9e06d73befa22e2b37c3604820929dd6c6989fe661048e4b2b1f27801ffffffff020000000000000000007469c502000000002321037b841e75f541fcecb0e70bc3f55e32dc04bed6fe2a48ad08f1fd2db26135b1f3ac0000000046304402206afe8606478831c4f21cd1923098d16fc5f10a844764410405aeb1631395c92d02201dc69cb6d5bfafd08bf37fe39c29289086822b18672b533c3945998e0269038b");
+        let tx: Result<Transaction, _> = deserialize(&tx_bytes);
+        assert!(tx.is_ok());
     }
 
     #[test]

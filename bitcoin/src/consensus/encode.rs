@@ -117,8 +117,10 @@ pub fn serialize_hex<T: Encodable + ?Sized>(data: &T) -> String {
 /// Deserializes an object from a vector, will error if said deserialization
 /// doesn't consume the entire vector.
 pub fn deserialize<T: Decodable>(data: &[u8]) -> Result<T, Error> {
+    println!("Deserializing...");
     let (rv, consumed) = deserialize_partial(data)?;
 
+    println!("data.len: {}, consumed: {}", data.len(), consumed);
     // Fail if data are not consumed entirely.
     if consumed == data.len() {
         Ok(rv)

@@ -1140,6 +1140,7 @@ mod tests {
         // We need a tx with more inputs than outputs.
         let tx = Transaction {
             version: 1,
+            time: 0,
             lock_time: absolute::LockTime::ZERO,
             input: vec![TxIn::default(), TxIn::default()],
             output: vec![TxOut::default()],
@@ -1328,6 +1329,7 @@ mod tests {
     fn test_sighash_errors() {
         let dumb_tx = Transaction {
             version: 0,
+            time: 0,
             lock_time: absolute::LockTime::ZERO,
             input: vec![TxIn::default()],
             output: vec![],

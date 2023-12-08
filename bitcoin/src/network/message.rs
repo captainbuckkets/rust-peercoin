@@ -424,8 +424,6 @@ impl Decodable for RawNetworkMessage {
 
         let mut mem_d = io::Cursor::new(raw_payload);
 
-        println!("cmd: {:?}", cmd);
-
         let payload = match &cmd.0[..] {
             "version" => {
                 NetworkMessage::Version(Decodable::consensus_decode_from_finite_reader(&mut mem_d)?)

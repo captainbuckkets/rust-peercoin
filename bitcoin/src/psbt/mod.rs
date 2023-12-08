@@ -827,6 +827,7 @@ mod tests {
         let psbt = PartiallySignedTransaction {
             unsigned_tx: Transaction {
                 version: 2,
+                time: 0,
                 lock_time: absolute::LockTime::ZERO,
                 input: vec![],
                 output: vec![],
@@ -897,6 +898,7 @@ mod tests {
         let expected = PartiallySignedTransaction {
             unsigned_tx: Transaction {
                 version: 2,
+                time: 0,
                 lock_time: absolute::LockTime::from_consensus(1257139),
                 input: vec![
                     TxIn {
@@ -1154,6 +1156,7 @@ mod tests {
             let unserialized = PartiallySignedTransaction {
                 unsigned_tx: Transaction {
                     version: 2,
+                    time: 0,
                     lock_time: absolute::LockTime::from_consensus(1257139),
                     input: vec![
                         TxIn {
@@ -1186,6 +1189,7 @@ mod tests {
                     Input {
                         non_witness_utxo: Some(Transaction {
                             version: 1,
+                            time: 0,
                             lock_time: absolute::LockTime::ZERO,
                             input: vec![
                                 TxIn {
@@ -1474,6 +1478,7 @@ mod tests {
         let mut unserialized = PartiallySignedTransaction {
             unsigned_tx: Transaction {
                 version: 2,
+                time: 0,
                 lock_time: absolute::LockTime::from_consensus(1257139),
                 input: vec![
                     TxIn {
@@ -1506,6 +1511,7 @@ mod tests {
                 Input {
                     non_witness_utxo: Some(Transaction {
                         version: 1,
+                        time: 0,
                         lock_time: absolute::LockTime::ZERO,
                         input: vec![
                             TxIn {
@@ -1644,6 +1650,7 @@ mod tests {
         let mut t = PartiallySignedTransaction {
             unsigned_tx: Transaction {
                 version: 2,
+                time: 0,
                 lock_time: absolute::LockTime::from_consensus(1257139),
                 input: vec![
                     TxIn {
@@ -1675,6 +1682,7 @@ mod tests {
                 Input {
                     non_witness_utxo: Some(Transaction {
                         version: 1,
+                        time: 0,
                         lock_time: absolute::LockTime::ZERO,
                         input: vec![
                             TxIn {
