@@ -1047,19 +1047,6 @@ impl Transaction {
         self.input.len() == 1 && self.input[0].previous_output.is_null()
     }
 
-    /// Returns `true` if the transaction itself opted in to be BIP-125-replaceable (RBF).
-    ///
-    /// # Warning
-    ///
-    /// **Incorrectly relying on RBF may lead to monetary loss!**
-    ///
-    /// This **does not** cover the case where a transaction becomes replaceable due to ancestors
-    /// being RBF. Please note that transactions **may be replaced** even if they **do not** include
-    /// the RBF signal: <https://bitcoinops.org/en/newsletters/2022/10/19/#transaction-replacement-option>.
-    pub fn is_explicitly_rbf(&self) -> bool {
-        self.input.iter().any(|input| input.sequence.is_rbf())
-    }
-
     /// Returns true if this [`Transaction`]'s absolute timelock is satisfied at `height`/`time`.
     ///
     /// # Returns
@@ -1149,7 +1136,7 @@ impl Encodable for Transaction {
 
         println!("Transaction consensus_encode {} {}", self.version, self.time);
 
-        if self.version != 4 {
+        if self.version != 3 {
             len += self.version.consensus_encode(w)?;
         }
 
@@ -1189,7 +1176,7 @@ impl Decodable for Transaction {
 
         println!("TX VERSION {}", version);
 
-        let time = if version != 3 && version != 4 {
+        let time = if version != 3 {
             <u32>::consensus_decode_from_finite_reader(r)?
         } else {
             // Really seems like me including 0 is causing the issue
@@ -1763,13 +1750,6 @@ mod tests {
     #[test]
     fn test_v3_transaction() {
         let tx_bytes = hex!("030000000001010000000000000000000000000000000000000000000000000000000000000000ffffffff0603ade70a0101ffffffff020000000000000000000000000000000000266a24aa21a9ede8eb36d2f28c817479902d8f9007e20884b2b27fdf804aa70f279efa10f889840120000000000000000000000000000000000000000000000000000000000000000000000000");
-        let tx: Result<Transaction, _> = deserialize(&tx_bytes);
-        assert!(tx.is_ok());
-    }
-
-    #[test]
-    fn test_v4_transaction() {
-        let tx_bytes = hex!("04000000f0cd0a625f3c4edd2ed383b6b768d0a4ffcbd0a434748c222c5a9aed4251f6b959ac4babb9b5a0fa60aca7ef2f6573edf0ab1160258ca4c999715d735a61568c612858658c330b1c0000000002030000000001010000000000000000000000000000000000000000000000000000000000000000ffffffff0603ade70a0101ffffffff020000000000000000000000000000000000266a24aa21a9ede8eb36d2f28c817479902d8f9007e20884b2b27fdf804aa70f279efa10f8898401200000000000000000000000000000000000000000000000000000000000000000000000000300000001d3dfd47789fc64e2d436e25588c1e70485bd8d6b8f19bf6070f3d3af9a7d370d01000000484730440220025c42834e88b20c336a38de917f15d3933495838ab9d7e6a14489d810f3dc0b02206c9d60abf9e06d73befa22e2b37c3604820929dd6c6989fe661048e4b2b1f27801ffffffff020000000000000000007469c502000000002321037b841e75f541fcecb0e70bc3f55e32dc04bed6fe2a48ad08f1fd2db26135b1f3ac0000000046304402206afe8606478831c4f21cd1923098d16fc5f10a844764410405aeb1631395c92d02201dc69cb6d5bfafd08bf37fe39c29289086822b18672b533c3945998e0269038b");
         let tx: Result<Transaction, _> = deserialize(&tx_bytes);
         assert!(tx.is_ok());
     }
