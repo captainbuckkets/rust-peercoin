@@ -806,8 +806,8 @@ impl<V: NetworkValidation> Address<V> {
             Network::Testnet | Network::Signet | Network::Regtest => SCRIPT_ADDRESS_PREFIX_TEST,
         };
         let bech32_hrp = match self.network {
-            Network::Bitcoin => "bc",
-            Network::Testnet | Network::Signet => "tb",
+            Network::Bitcoin => "pc",
+            Network::Testnet | Network::Signet => "tp",
             Network::Regtest => "bcrt",
         };
         let encoding =
@@ -1110,8 +1110,8 @@ impl FromStr for Address<NetworkUnchecked> {
         // try bech32
         let bech32_network = match find_bech32_prefix(s) {
             // note that upper or lowercase is allowed but NOT mixed case
-            "bc" | "BC" => Some(Network::Bitcoin),
-            "tb" | "TB" => Some(Network::Testnet), // this may also be signet
+            "pc" | "PC" => Some(Network::Bitcoin),
+            "tp" | "TB" => Some(Network::Testnet), // this may also be signet
             "bcrt" | "BCRT" => Some(Network::Regtest),
             _ => None,
         };
