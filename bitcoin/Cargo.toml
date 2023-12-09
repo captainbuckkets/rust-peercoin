@@ -35,7 +35,8 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
 bitcoin-internals = { path = "../internals", package = "bitcoin-private", version = "0.1.0" }
-bech32 = { version = "0.9.0", default-features = false }
+# bech32 = { version = "0.9.0", default-features = false }
+bech32 = { version = "0.9.0", default-features = false, git = "https://github.com/captainbuckkets/rust-bech32-peercoin.git", branch = "v0.9.0-patch" }
 bitcoin_hashes = { version = "0.12.0", default-features = false }
 secp256k1 = { version = "0.27.0", default-features = false, features = ["bitcoin_hashes"] }
 hex_lit = "0.1.1"
