@@ -1174,16 +1174,12 @@ impl Decodable for Transaction {
     ) -> Result<Self, encode::Error> {
         let version = i32::consensus_decode_from_finite_reader(r)?;
 
-        println!("TX VERSION {}", version);
-
         let time = if version != 3 {
             <u32>::consensus_decode_from_finite_reader(r)?
         } else {
             // Really seems like me including 0 is causing the issue
             0
         };
-
-        println!("TX TIME {}", time);
 
         let input = Vec::<TxIn>::consensus_decode_from_finite_reader(r)?;
         // segwit
