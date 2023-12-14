@@ -72,14 +72,14 @@ impl Denomination {
     /// Returns stringly representation of this
     fn as_str(self) -> &'static str {
         match self {
-            Denomination::Bitcoin => "BTC",
-            Denomination::CentiBitcoin => "cBTC",
-            Denomination::MilliBitcoin => "mBTC",
-            Denomination::MicroBitcoin => "uBTC",
-            Denomination::NanoBitcoin => "nBTC",
-            Denomination::PicoBitcoin => "pBTC",
+            Denomination::Bitcoin => "PPC",
+            Denomination::CentiBitcoin => "cPPC",
+            Denomination::MilliBitcoin => "mPPC",
+            Denomination::MicroBitcoin => "uPPC",
+            Denomination::NanoBitcoin => "nPPC",
+            Denomination::PicoBitcoin => "pPPC",
             Denomination::Bit => "bits",
-            Denomination::Satoshi => "satoshi",
+            Denomination::Satoshi => "micro peercoins",
             Denomination::MilliSatoshi => "msat",
         }
     }

@@ -1134,8 +1134,6 @@ impl Encodable for Transaction {
     fn consensus_encode<W: io::Write + ?Sized>(&self, w: &mut W) -> Result<usize, io::Error> {
         let mut len = 0;
 
-        println!("Transaction consensus_encode {} {}", self.version, self.time);
-
         if self.version != 3 {
             len += self.version.consensus_encode(w)?;
         }
