@@ -1947,11 +1947,11 @@ mod tests {
     fn from_str() {
         use super::ParseAmountError as E;
 
-        assert_eq!(Amount::from_str("x BTC"), Err(E::InvalidCharacter('x')));
-        assert_eq!(Amount::from_str("xBTC"), Err(E::UnknownDenomination("xBTC".into())));
-        assert_eq!(Amount::from_str("5 BTC BTC"), Err(E::UnknownDenomination("BTC BTC".into())));
-        assert_eq!(Amount::from_str("5BTC BTC"), Err(E::InvalidCharacter('B')));
-        assert_eq!(Amount::from_str("5 5 BTC"), Err(E::UnknownDenomination("5 BTC".into())));
+        assert_eq!(Amount::from_str("x PPC"), Err(E::InvalidCharacter('x')));
+        assert_eq!(Amount::from_str("xPPC"), Err(E::UnknownDenomination("xBTC".into())));
+        assert_eq!(Amount::from_str("5 PPC PPC"), Err(E::UnknownDenomination("BTC BTC".into())));
+        assert_eq!(Amount::from_str("5PPC PPC"), Err(E::InvalidCharacter('B')));
+        assert_eq!(Amount::from_str("5 5 PPC"), Err(E::UnknownDenomination("5 BTC".into())));
 
         #[cfg_attr(rust_v_1_46, track_caller)]
         fn case(s: &str, expected: Result<Amount, ParseAmountError>) {
@@ -1967,20 +1967,20 @@ mod tests {
 
         case("5 BCH", Err(E::UnknownDenomination("BCH".to_owned())));
 
-        case("-1 BTC", Err(E::Negative));
-        case("-0.0 BTC", Err(E::Negative));
-        case("0.123456789 BTC", Err(E::TooPrecise));
+        case("-1 PPC", Err(E::Negative));
+        case("-0.0 PPC", Err(E::Negative));
+        case("0.123456789 PPC", Err(E::TooPrecise));
         scase("-0.1 satoshi", Err(E::TooPrecise));
-        case("0.123456 mBTC", Err(E::TooPrecise));
+        case("0.123456 mPPC", Err(E::TooPrecise));
         scase("-1.001 bits", Err(E::TooPrecise));
-        scase("-200000000000 BTC", Err(E::TooBig));
+        scase("-200000000000 PPC", Err(E::TooBig));
         case("18446744073709551616 sat", Err(E::TooBig));
 
         case(".5 bits", Ok(Amount::from_sat(50)));
         scase("-.5 bits", Ok(SignedAmount::from_sat(-50)));
-        case("0.00253583 BTC", Ok(Amount::from_sat(253583)));
+        case("0.00253583 PPC", Ok(Amount::from_sat(253583)));
         scase("-5 satoshi", Ok(SignedAmount::from_sat(-5)));
-        case("0.10000000 BTC", Ok(Amount::from_sat(100_000_00)));
+        case("0.10000000 PPC", Ok(Amount::from_sat(100_000_00)));
         scase("-100 bits", Ok(SignedAmount::from_sat(-10_000)));
     }
 

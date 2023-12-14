@@ -571,7 +571,7 @@ pub struct AddressEncoding<'a> {
     pub p2pkh_prefix: u8,
     /// base58 version byte for p2sh payloads (e.g. 0x05 for "3..." addresses).
     pub p2sh_prefix: u8,
-    /// hrp used in bech32 addresss (e.g. "bc" for "bc1..." addresses).
+    /// hrp used in bech32 addresss (e.g. "pc" for "pc1..." addresses).
     pub bech32_hrp: &'a str,
 }
 
